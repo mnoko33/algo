@@ -2,20 +2,16 @@ import heapq
 
 def solution(stock, dates, supplies, k):
     answer = 0
-    heap = []
-    stock -= 1
-    for i in range(len(dates)):
-        heapq.heappush(heap, -supplies[i])
-        date = dates[i]
-        if stock > date:
-            continue
-            
-        while stock < date:
-            answer += 1
-            stock -= heapq.heappop(heap)
-
-    while stock < k - 1:
-        answer += 1
-        stock -= heapq.heappop(heap)
-        
+    h=[]
+    for idx, date in enumerate(dates):
+        heapq.heappush(h, -supplies[idx])
+        if idx == len(dates) - 1:
+            while stock < k:
+                answer += 1
+                stock -= heapq.heappop(h)
+        else:
+            if stock < dates[idx+1]:
+                while stock < dates[idx+1]:
+                    answer += 1
+                    stock -= heapq.heappop(h)
     return answer

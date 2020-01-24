@@ -1,10 +1,9 @@
 def solution(citations):
-    answer = 0
     citations.sort()
-    N = len(citations)
-    for i in range(N):
-        h = citations[i]
-        if N - i >= h and i < h:
-            answer = max(h, answer)
-    
-    return answer
+    n = len(citations)
+    h = n
+    while True:
+        for i in range(n):
+            if citations[i] >= h and n - i >= h:
+                return h
+        h -= 1
