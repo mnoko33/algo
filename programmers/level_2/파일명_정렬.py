@@ -67,3 +67,35 @@ def solution(files):
         answer.append(file[0] + file[1] + file[2])    
     
     return answer
+
+
+# python 정렬 lambda 사용
+def solution(files):
+    def seperate(file):
+        head = ""
+        number = ""
+        tail = ""
+        is_head = False
+        is_number = False
+        for i,s in enumerate(file):
+            if is_head == False and type(s) is str and s not in ['1','2','3','4','5','6','7','8','9','0']:
+                head += s
+                continue
+            is_head = True
+            if is_number == False and s in ['1','2','3','4','5','6','7','8','9','0']:
+                number += s
+                continue
+            is_number = True
+
+            if is_number is True and is_head is True:
+                tail = file[i:]
+                break
+        return [head, number, tail]
+
+    answer = []
+    files = [seperate(file) for file in files]
+    files.sort(key=lambda x: (x[0].upper(), int(x[1])))
+    for file in files:
+        answer.append(file[0] + file[1] + file[2])    
+    
+    return answer
