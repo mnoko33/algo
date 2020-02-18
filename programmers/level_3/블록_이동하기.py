@@ -112,3 +112,36 @@ def solution(board):
 
 
 print(solution([[0, 0, 0, 1, 1],[0, 0, 0, 1, 0],[0, 1, 0, 1, 1],[1, 1, 0, 0, 1],[0, 0, 0, 0, 0]]))
+
+
+################################################################################################################################################
+from collections import deque
+
+def solution(board):
+    answer = 0
+    N = len(board)
+    def check_boundary(coords):
+        for coord in coords:
+            if coord < 0 or coord >= N-1:
+                return False
+        return True
+        
+    # direction [down, right, left, up]
+    dx = [1,0,0,-1]
+    dy = [0,1,-1,0]
+    Q = deque([[0,0,1]])
+    while Q:
+        x,y,d = Q.popleft()
+        # 상하좌우 이동
+        for i in range(4):
+            nx,ny = x+dx[i],y+dy[i]
+            if d == 0:
+                
+            elif d == 1:
+                
+            elif d == 2:
+                
+            else:
+                
+    
+    return answer
