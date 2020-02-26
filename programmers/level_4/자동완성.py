@@ -1,3 +1,6 @@
+import sys
+sys.setrecursionlimit(10**6) 
+
 def solution(words):
     answer = 0
     words = sorted(words, key=lambda x: len(x))
@@ -36,7 +39,6 @@ def solution(words):
 
         if len(node.next) == 1 and '*' in node.next:
             return flag
-            
         result = 0
         for new_node in node.next:
             if new_node == '*':
