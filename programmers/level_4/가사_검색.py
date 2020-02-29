@@ -1,156 +1,39 @@
 # 효율성 1, 2 시간 초과
 
-# def solution(words, queries):    
-#     answer = []
-#     query_hash = {}
+def solution(words, queries):    
+    answer = []
+    query_hash = {}
 
-#     def is_same(word, query):
-#         if len(word) != len(query):
-#             return False
-#         for idx, char in enumerate(query):
-#             if char != '?' and char != word[idx]:
-#                 return False    
-#         return True
+    def is_same(word, query):
+        if len(word) != len(query):
+            return False
+        for idx, char in enumerate(query):
+            if char != '?' and char != word[idx]:
+                return False    
+        return True
 
-#     for query in queries:
-#         if query in query_hash:
-#             answer.append(query_hash[query])
-#             continue
-#         cnt = 0
-#         for word in words:
-#             if is_same(word, query):
-#                 cnt += 1
-#         query_hash[query] = cnt
-#         answer.append(cnt)
-
-#     return answer
-
-
-############# trie 알고리즘 도전 ... but 실패
-# from collections import deque
-
-# def solution(words, queries):
-#     result = []
-#     nodes = []
-
-#     class Node:
-#         def __init__(self, data, next=[], cnt=0):
-#             self.data = data
-#             self.next = next
-#             self.cnt = 0
-
-#         def is_next(self):
-#             if len(self.next):
-#                 return True
-#             return False
-
-#     def find_node(arr, char):
-#         for _arr in arr:
-#             if _arr.data == char:
-#                 return _arr
-#         return None
-
-#     def make_node(word):
-#         arr = nodes
-#         for i,char in enumerate(word):
-#             node = find_node(arr, char)
-#             if node:
-#                 arr = node.next
-#             else:
-#                 new_node = Node(char, [], i)
-#                 arr.append(new_node)
-#                 arr = new_node.next
-
-#     def is_query_possible(query, nodes):
-#         cnt = 0
-#         Q = deque()
-#         first_char = query[0]
-#         if first_char == '?':
-#             for node in nodes:
-#                 Q.append(node)
-#         else:
-#             node = find_node(nodes, first_char)
-#             if node:
-#                 Q.append(node)
-#             else:
-#                 return 0
-#         idx = 1
-#         while idx < len(query):
-#             char = query[idx]
-#             new_Q = deque()
-#             while Q:
-#                 node = Q.popleft()
-#                 nodes = node.next
-#                 if char == "?":
-#                     for node in nodes:
-#                         new_Q.append(node)
-#                 else:
-#                     node = find_node(nodes, char)
-#                     if node:
-#                         new_Q.append(node)
-#             Q = new_Q
-#             idx += 1
-#             if idx == len(query):
-#                 for node in Q:
-#                     if node.next == []:
-#                         cnt += 1
-#         return cnt
-
-#     for word in words:
-#         make_node(word)
-    
-#     for query in queries:
-#         result.append(is_query_possible(query, nodes))
-#     return result
-
-
-## 실패
-def solution(words, queries): 
-    trie = {}
-    used_query = {}
-    result = []
-    def make_trie(word):
-        now_trie = trie
-        for char in word:
-            now_trie = now_trie.setdefault(char, {})
-        now_trie['end'] = len(word)
-
-    def search(idx, N, query, trie):
-        global cnt
-        if idx == N:
-            if 'end' in trie:
-                cnt += 1
-            return
-        
-        char = query[idx]
-        if char == '?':
-            for new_trie in trie:
-                if 'end' not in new_trie:
-                    search(idx+1,N,query,trie[new_trie])
-        else:
-            if char not in trie:
-                return 
-            else:
-                search(idx+1, N, query, trie[char])
-
-    for word in words:
-        make_trie(word)
-    
     for query in queries:
-        if query in used_query:
-            result.append(used_query[query])
+        if query in query_hash:
+            answer.append(query_hash[query])
             continue
-        global cnt
         cnt = 0
-        char = query[0]
-        if char == '?':
-            for key in trie:
-                search(1, len(query), query, trie[key])
-        else:
-            if char in trie:
-                search(1, len(query), query, trie[char])
-        used_query[query] = cnt
-        result.append(cnt)
-    return result
+        for word in words:
+            if is_same(word, query):
+                cnt += 1
+        query_hash[query] = cnt
+        answer.append(cnt)
 
-print(solution(["frodo", "front", "frost", "frozen", "frame", "kakao"], ["fro??", "????o", "fr???", "fro???", "pro?"]))
+    return answer
+
+# 효율성 풀이 queries에 담긴 문자열을 words에 담긴 문자열과 하나하나 비교하는 방법으로는 효율성 풀이를 통과할 수 없습니다. 
+# queries에 담긴 문자열이 words에 있는지 탐색하는 효율적인 방법으로 트라이(Trie) 자료구조를 사용할 수 있습니다.
+# 이때, 원래 문자열을 이용해 만든 트라이와, 문자열을 뒤집어서 만든 트라이 두 개를 이용해야 합니다. 
+# ???가 접두사인 경우는, 문자열을 뒤집어서 ???가 접미사로 나온다고 생각할 수 있기 때문입니다. 
+# 예를 들어, “??ost”의 경우 “tso??”로 생각할 수 있습니다.
+# 단어를 트라이에 넣을 때는 길이에 따라 서로 다른 트라이에 넣어줘야 합니다. 
+# 같은 접두사를 가지더라도 길이에 따라 개수가 달라질 수 있기 때문입니다. 
+# 단어 하나의 길이가 최대 1만이기 때문에 길이가 1인 문자열을 넣을 트라이부터 길이가 1만인 문자열을 넣을 트라이까지 생성합니다. 
+# 이제 각 단어별로 길이에 맞는 트라이에 넣어줍니다.
+# 단어를 넣을 때는 각 문자별로 해당 노드의 count를 1씩 증가시켜 줍니다. 
+# 이후에 단어를 검색할 때는 접두사에 해당하는 노드까지 이동한 후 해당 노드의 count를 return 하면 됩니다.
+# 이 외에도 문자열을 정렬한 다음 이분탐색하는 방법 등을 사용할 수 있습니다.
