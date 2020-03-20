@@ -4,7 +4,7 @@ from collections import deque
 
 maze = [[list(map(int, input().split(' '))) for _ in range(5)] for _ in range(5)]
 # 입구 [0][0][0]
-# 출구 [5][5][5]
+# 출구 [4][4][4]
 dx = [-1, 1, 0, 0, 0, 0]
 dy = [0, 0, 1, 0, -1, 0]
 dz = [0, 0, 0, 1, 0, -1]
@@ -22,7 +22,7 @@ def search(target):
     while Q:
         i, j, k = Q.popleft()
         # 더 이상 볼 필요가 없는 문제
-        if visited[i][j][j] > answer:
+        if visited[i][j][k] > answer:
             return -1
         for idx in range(6):
             ni = i + dx[idx]
