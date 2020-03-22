@@ -31,6 +31,7 @@ while True:
                 visited[v].append(now_v)
                 dist[v] = p + now_p
                 heapq.heappush(PQ, (p + now_p, v))
+                
             if p + now_p < dist[v]:
                 visited[v] = [now_v]
                 dist[v] = p + now_p
