@@ -1,27 +1,23 @@
 from collections import deque
 
 def solution(bridge_length, weight, truck_weights):
-    bridge = deque()
-    bridge_weight = deque()
     answer = 0
-    while truck_weights:
+    Q = deque([0] * bridge_length)
+    truck_weights = deque(truck_weights)
+    now_weight = 0
+    while Q:
         answer += 1
-        for idx, truck_loc in enumerate(bridge):
-            bridge[idx] = truck_loc - 1
+        now_weight -= Q.popleft()
+        if truck_weights:
+            if now_weight + truck_weights[0] <= weight:
+                new_weight = truck_weights.popleft()
+                now_weight += new_weight
+                Q.append(new_weight)
+            else:
+                Q.append(0)
 
-        if bridge and bridge[0] == -1:
-            bridge.popleft()
-            bridge_weight.popleft()
-
-        if sum(bridge_weight) + truck_weights[0] > weight:
-            pulling = bridge[0]
-            for idx, truck_loc in enumerate(bridge):
-                bridge[idx] = truck_loc - pulling
-            answer += pulling
-        else:
-            bridge.append(bridge_length-1)
-            bridge_weight.append(truck_weights.pop(0))
-        
-        if len(truck_weights) == 0 and sum(bridge) > 0:
-            answer += bridge.pop() + 1
     return answer
+
+
+
+print(solution(2, 10, [7, 4, 5, 6]))
